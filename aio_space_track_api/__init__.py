@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from .client import SpaceTrackApi
+from .exc import SpaceTrackEntityNotSupported
+from .query import SpaceTrackQueryBuilder
 
-from .api import SpaceTrackApi, SpaceTrackQueryBuilder
-
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 __all__ = (
     'SpaceTrackApi',
-    'SpaceTrackQueryBuilder'
+    'SpaceTrackQueryBuilder',
+    'SpaceTrackEntityNotSupported',
 )
