@@ -3,7 +3,7 @@ from .client import SpaceTrackApi
 from .exc import SpaceTrackEntityNotSupported
 from .query import SpaceTrackQueryBuilder
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 __all__ = (
     'SpaceTrackApi',

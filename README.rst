@@ -7,7 +7,7 @@ Small async helper for https://space-track.org query api.
 Requirements
 ------------
 
-- Python >= 3.4.2
+- Python >= 3.5.0
 - aiohttp >= 2.0.7
 
 Getting started
