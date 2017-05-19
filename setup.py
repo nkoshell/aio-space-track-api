@@ -13,10 +13,6 @@ if sys.version_info < (3, 5, 0):
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 VERSION_REGEXP = re.compile(r"^__version__ = [\'\"](.+?)[\'\"]$", re.MULTILINE)
 
-install_requires = (
-    'aiohttp>==2.0.7',
-)
-
 
 def read(fn):
     with codecs.open(os.path.join(PROJECT_DIR, fn), encoding='utf-8') as f:
@@ -28,6 +24,7 @@ def version():
         return VERSION_REGEXP.findall(read(os.path.join('aio_space_track_api', '__init__.py')))[0]
     except IndexError:
         raise RuntimeError('Unable to determine version.')
+
 
 vn = version()
 url = 'https://github.com/NikitaKoshelev/aio-space-track-api'
@@ -43,5 +40,5 @@ setup(
     license='MIT',
     author='NikitaKoshelev',
     author_email='nikita.koshelev@gmail.com',
-    install_requires=install_requires,
+    install_requires=['aiohttp>=2.0.7'],
 )
