@@ -12,6 +12,14 @@ Requirements
 - aiohttp >= 2.0.7
 
 
+Installing
+__________
+
+::
+
+    pip install aio-space-track-api
+
+
 Getting started
 ---------------
 
