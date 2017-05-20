@@ -27,11 +27,11 @@ def version():
 
 
 vn = version()
-url = 'https://github.com/NikitaKoshelev/aio-space-track-api'
+url = 'https://github.com/nkoshell/aio-space-track-api'
 
 setup(
     name='aio-space-track-api',
-    description='Small async helper for `space-track.org` query api.',
+    description='Small async wrapper for "space-track-api" package.',
     long_description=read('README.rst'),
     version=vn,
     packages=['aio_space_track_api'],
@@ -40,5 +40,5 @@ setup(
     license='MIT',
     author='NikitaKoshelev',
     author_email='nikita.koshelev@gmail.com',
-    install_requires=['aiohttp>=2.0.7'],
+    install_requires=['aiohttp>=2.0.7', 'space-track-api>=1.0.0'],
 )

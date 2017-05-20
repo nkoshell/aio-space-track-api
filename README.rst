@@ -1,14 +1,16 @@
-SpaceTrackApi async client
-__________________________
+AsyncSpaceTrackApi async client
+_______________________________
 
-Small async helper for https://space-track.org query api.
+Small async wrapper for "space-track-api" package.
 
 
 Requirements
 ------------
 
 - Python >= 3.5.0
+- space-track-api >= 1.0.0
 - aiohttp >= 2.0.7
+
 
 Getting started
 ---------------
@@ -20,17 +22,18 @@ To retrieve something from Space-Track:
   # -*- coding: utf-8 -*-
 
   import asyncio
+  from pprint import pprint
 
-  from aio_space_track_api import SpaceTrackApi
+  from aio_space_track_api import AsyncSpaceTrackApi
 
 
   async def main(loop):
-      async with SpaceTrackApi(loop=loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>') as api:
+      async with AsyncSpaceTrackApi(loop=loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>') as api:
           tle_list = await api.tle(EPOCH='>now-3',
                                    NORAD_CAT_ID=(25544, 25541,),
                                    order_by=('EPOCH desc', 'NORAD_CAT_ID',),
                                    predicate=('EPOCH', 'NORAD_CAT_ID', 'TLE_LINE0', 'TLE_LINE1', 'TLE_LINE2',))
-          print(tle_list)
+          pprint(tle_list, indent=2)
 
 
   if __name__ == '__main__':
@@ -44,8 +47,9 @@ Create simple proxy Space-Track server:
 
   # -*- coding: utf-8 -*-
 
-  from aio_space_track_api import SpaceTrackApi
   from aiohttp import web
+
+  from aio_space_track_api import AsyncSpaceTrackApi
 
 
   async def query(request):
@@ -60,7 +64,7 @@ Create simple proxy Space-Track server:
 
 
   async def start_space_track(app):
-      app['space_track'] = SpaceTrackApi(loop=app.loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>')
+      app['space_track'] = AsyncSpaceTrackApi(loop=app.loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>')
       await app['space_track'].login()
 
 
@@ -75,6 +79,7 @@ Create simple proxy Space-Track server:
       app.on_cleanup.append(cleanup_space_track)
       app.router.add_get('/', query)
       web.run_app(app, port=8080)
+
 
 
 Retrieve with "httpie" <https://github.com/jakubroztocil/httpie> package::
@@ -116,4 +121,4 @@ Source code
 -----------
 
 The latest developer version is available in a github repository:
-https://github.com/NikitaKoshelev/aio-space-track-api
+https://github.com/nkoshell/aio-space-track-api

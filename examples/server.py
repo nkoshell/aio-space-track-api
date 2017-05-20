@@ -2,7 +2,7 @@
 
 from aiohttp import web
 
-from aio_space_track_api import SpaceTrackApi
+from aio_space_track_api import AsyncSpaceTrackApi
 
 
 async def query(request):
@@ -17,7 +17,7 @@ async def query(request):
 
 
 async def start_space_track(app):
-    app['space_track'] = SpaceTrackApi(loop=app.loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>')
+    app['space_track'] = AsyncSpaceTrackApi(loop=app.loop, login='<YOUR_LOGIN>', password='<YOUR_PASSWORD>')
     await app['space_track'].login()
 
 

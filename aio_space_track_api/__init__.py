@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-from .client import SpaceTrackApi
-from .exc import SpaceTrackEntityNotSupported
-from .query import SpaceTrackQueryBuilder
+from .client import AsyncSpaceTrackApi
 
-__version__ = '1.0.3'
+__version__ = '2.0.0'
 
 __all__ = (
-    'SpaceTrackApi',
-    'SpaceTrackQueryBuilder',
-    'SpaceTrackEntityNotSupported',
+    'AsyncSpaceTrackApi',
 )

@@ -2,19 +2,16 @@
 import logging
 
 from aiohttp import ClientSession, ClientResponseError
+from space_track_api import SpaceTrackApi, SpaceTrackQueryBuilder
 
-from .query import SpaceTrackQueryBuilder
 
-
-class SpaceTrackApi(object):
+class AsyncSpaceTrackApi(SpaceTrackApi):
     def __init__(self, login, password, session=None, loop=None, **kwargs):
-        self.logger = kwargs.pop('logger', logging.getLogger('{}.{}'.format(__name__, self.__class__.__name__)))
-        self.credentials = dict(identity=login, password=password)
+        kwargs.setdefault('logger', logging.getLogger('{}.{}'.format(__name__, self.__class__.__name__)))
+
+        super().__init__(login, password, **kwargs)
+
         self.session = session if isinstance(session, ClientSession) else ClientSession(loop=loop)
-        self.url = kwargs.pop('url', 'https://www.space-track.org')
-        self.query_url = kwargs.pop('query_url', 'basicspacedata/query')
-        self.login_url = kwargs.pop('login_url', 'ajaxauth/login')
-        self.logout_url = kwargs.pop('logout_url', 'ajaxauth/logout')
 
     async def tle_latest(self, **kwargs):
         kwargs['entity'] = 'tle_latest'
@@ -99,13 +96,13 @@ class SpaceTrackApi(object):
             if resp.reason == 'OK':
                 self.logger.info(await resp.text())
 
-    def close(self):
-        self.session.close()
+    def __enter__(self):
+        raise NotImplementedError('Only async use')
 
     async def __aenter__(self):
         await self.login()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, *args):
         await self.logout()
         self.close()
