@@ -8,7 +8,7 @@ Requirements
 ------------
 
 - Python >= 3.5.0
-- space-track-api >= 1.0.0
+- space-track-api > 1.0.0
 - aiohttp >= 2.0.7
 
 
