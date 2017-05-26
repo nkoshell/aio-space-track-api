@@ -40,5 +40,5 @@ setup(
     license='MIT',
     author='NikitaKoshelev',
     author_email='nikita.koshelev@gmail.com',
-    install_requires=['aiohttp>=2.0.7', 'space-track-api>1.0.0'],
+    install_requires=['aiohttp>=2.0.7', 'space-track-api>=1.0.2'],
 )

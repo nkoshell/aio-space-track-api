@@ -4,6 +4,8 @@ import logging
 from aiohttp import ClientSession, ClientResponseError
 from space_track_api import SpaceTrackApi, SpaceTrackQueryBuilder
 
+from .utils import AsyncRateLimiter
+
 
 class AsyncSpaceTrackApi(SpaceTrackApi):
     def __init__(self, login, password, session=None, loop=None, **kwargs):
@@ -13,49 +15,7 @@ class AsyncSpaceTrackApi(SpaceTrackApi):
 
         self.session = session if isinstance(session, ClientSession) else ClientSession(loop=loop)
 
-    async def tle_latest(self, **kwargs):
-        kwargs['entity'] = 'tle_latest'
-        return await self.query(**kwargs)
-
-    async def tle_publish(self, **kwargs):
-        kwargs['entity'] = 'tle_publish'
-        return await self.query(**kwargs)
-
-    async def omm(self, **kwargs):
-        kwargs['entity'] = 'omm'
-        return await self.query(**kwargs)
-
-    async def boxscore(self, **kwargs):
-        kwargs['entity'] = 'boxscore'
-        return await self.query(**kwargs)
-
-    async def satcat(self, **kwargs):
-        kwargs['entity'] = 'satcat'
-        return await self.query(**kwargs)
-
-    async def launch_site(self, **kwargs):
-        kwargs['entity'] = 'launch_site'
-        return await self.query(**kwargs)
-
-    async def satcat_change(self, **kwargs):
-        kwargs['entity'] = 'satcat_change'
-        return await self.query(**kwargs)
-
-    async def satcat_debut(self, **kwargs):
-        kwargs['entity'] = 'satcat_debut'
-        return await self.query(**kwargs)
-
-    async def decay(self, **kwargs):
-        kwargs['entity'] = 'decay'
-        return await self.query(**kwargs)
-
-    async def tip(self, **kwargs):
-        kwargs['entity'] = 'tip'
-        return await self.query(**kwargs)
-
-    async def tle(self, **kwargs):
-        return await self.query(**kwargs)
-
+    @AsyncRateLimiter(max_calls=20, period=60)
     async def query(self, **kwargs):
         qb = SpaceTrackQueryBuilder(**kwargs)
         url = '{url}/{query}'.format(url=self.url, query=qb)
@@ -67,6 +27,17 @@ class AsyncSpaceTrackApi(SpaceTrackApi):
             except (AttributeError, ClientResponseError) as e:
                 self.logger.exception(e)
                 return await resp.text()
+
+    async def login(self):
+        async with self.session.post('{}/{}'.format(self.url, self.login_url), data=self.credentials) as resp:
+            if resp.reason == 'OK':
+                self.logger.info('"Successfully logged in"')
+                return self.session
+
+    async def logout(self):
+        async with self.session.get('{}/{}'.format(self.url, self.logout_url)) as resp:
+            if resp.reason == 'OK':
+                self.logger.info(await resp.text())
 
     @staticmethod
     def get_response_method(fmt):
@@ -84,17 +55,6 @@ class AsyncSpaceTrackApi(SpaceTrackApi):
 
     async def __call__(self, **kwargs):
         return await self.query(**kwargs)
-
-    async def login(self):
-        async with self.session.post('{}/{}'.format(self.url, self.login_url), data=self.credentials) as resp:
-            if resp.reason == 'OK':
-                self.logger.info('"Successfully logged in"')
-                return self.session
-
-    async def logout(self):
-        async with self.session.get('{}/{}'.format(self.url, self.logout_url)) as resp:
-            if resp.reason == 'OK':
-                self.logger.info(await resp.text())
 
     def __enter__(self):
         raise NotImplementedError('Only async use')
